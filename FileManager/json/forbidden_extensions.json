@@ -1,0 +1,9 @@
+{"extensions": {
+    "executables": [
+        "bat", "exe", "msi", "apk", "cmd"
+    ],
+
+    "code_formats": [
+        "c", "cpp", "c++", "m", "g", "cs"
+    ]
+}}

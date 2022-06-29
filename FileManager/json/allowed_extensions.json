@@ -1,16 +1,7 @@
-/*
-Here is an example of the `json` file you can do.
-This file is only an example but it's used as a default file
-for the \FileManager\Methods\Upload by default.
-
-Of course, only the values (not keys) will get fetch from this file.
-Because of that, you can create many objects, but only values will
-get kept by the program.
-*/
 {"extensions": {
     "images": [
         "jpg", "jpeg", "ico", "gif", "svg",
-        "jfif", "webp", "png", "bmp", "pjpeg",
+        "jfif", "webp", "png", "bmp", "pjpeg"
     ],
 
     "videos": [

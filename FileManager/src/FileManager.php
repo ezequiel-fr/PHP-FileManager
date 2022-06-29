@@ -182,9 +182,9 @@ class FileManager extends Except {
      * @return Upload
      */
 
-    public function upload($content, string $allowedExtensions = "../json/allowed_extensions.json"): Upload
+    public function upload(): Upload
     {
-        $upload = new Upload($content, $allowedExtensions);
+        $upload = new Upload();
 
         return $upload;
     }

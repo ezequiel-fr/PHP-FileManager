@@ -1,5 +1,5 @@
 @echo off
 cls
 
-@REM start "" https://127.0.0.1:7000
-php -S 127.0.0.1:7000 -t ./
+@REM start "" https://192.168.1.27:7000
+php -S 192.168.1.27:7000 -t ./
