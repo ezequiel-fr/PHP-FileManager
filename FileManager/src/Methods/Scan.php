@@ -396,6 +396,8 @@ class Scan {
 
     public function getFilesExtension(array|string &$files)
     {
+        error_reporting(0);
+
         // String case (ex: "file.txt")
         if (is_string($files)) {
             $ext = $this->getExtension($files);
@@ -436,6 +438,8 @@ class Scan {
                     $file['extension'] = $ext;
             }
         }
+
+        error_reporting(-1);
     }
 
 
