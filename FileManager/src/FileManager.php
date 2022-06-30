@@ -136,8 +136,11 @@ class FileManager extends Except {
                 $scan->getFilesExtension($result);
                 $scan->getFilesName($result);
                 $scan->getLastModificationDate($result);
+
+                foreach ($result as &$a)
+                    $a["type"] = is_file($a["path"]) ? 'file' : 'folder';
             }
-            
+
             // Return the result as an array (can be fetch)
             return $result;
         } else {
@@ -203,6 +206,50 @@ class FileManager extends Except {
     {
         if (is_string($file))
             return [new Scan($file), "getFileContent"]($file);
+    }
+
+
+    /**
+     * Return a folder's size.
+     * 
+     * @return int size
+     */
+
+    public function getSize(): int
+    {
+        $scan = new Scan($this->_realPath);
+
+        $result = $scan->recursiveScan();
+        $scan->getFilesSize($result);
+
+        $size = 0;
+
+        foreach ($result as $a) {
+            if (isset($a["size"]))
+                $size += $a["size"];
+        }
+
+        return $size;
+    }
+
+
+    /**
+     * @param int|string $size
+     * 
+     * @return string human readable size.
+     */
+
+    static public function readableSize(int|string $size): string
+    {
+        $units = array('B', 'kB', 'MB', 'GB', 'TB');
+        $i = 0;
+
+        while (($size / 1024) > .9) {
+            $size /= 1024;
+            $i++;
+        }
+
+        return join("", [strval(round($size)), $units[$i]]);
     }
 
 }
