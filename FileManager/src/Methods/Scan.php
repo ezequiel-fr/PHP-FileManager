@@ -271,19 +271,44 @@ class Scan {
      * but we don't always return values (beacause it's useless).
      */
 
-    public function orderBy(array|string &$files, ?string $method = "", bool|int $ascend = true): ?string
+    static public function orderBy(array|string &$files, ?string $method = "", bool|int $ascend = true): array|string
     {
+        $arrayFiles = function ($array) {
+            if (is_string(array_key_first($array))) {
+                return $array;
+            } else {
+                
+            }
+        };
+
         // Check if it's an array, beacause order string is useless XD
         if (is_array($files)) {
             // A little switch method to check the order
             switch ($method) {
-                case $this::ORDER_BY_NAME:
+                case self::ORDER_BY_NAME:
+                    if (is_array($files[0])) {
+                        $a = [];
+                        $_files = $files;
+
+                        foreach ($files as $key => &$file)
+                            array_push($a, $file['path']."?$key");
+                        
+                        sort($a);
+
+                        foreach ($a as $b => &$c) {
+                            $files[$b] = $_files[substr(strstr($c, '?'), 1)];
+                        }
+
+                        return $files;
+                    }
+
+                    sort($files);
+                    return ($ascend ? $files : array_reverse($files));
+
+                case self::ORDER_BY_TYPES:
                     return null;
 
-                case $this::ORDER_BY_NAME:
-                    return null;
-
-                case $this::SEPARATE_FILES_FROM_FOLDERS:
+                case self::SEPARATE_FILES_FROM_FOLDERS:
                     $folders = [];
 
                     // Remove the folders from `$files` and store them into the variable `$folder`
@@ -299,12 +324,12 @@ class Scan {
 
                     if (!$ascend)
                         $files = array_reverse($files);
-
-                    break;
+                    
+                    return $files;
 
                 default:
                     // By default, order files by name
-                    return $this->orderBy($files, $this::ORDER_BY_NAME);
+                    return self::orderBy($files, self::ORDER_BY_NAME);
             }
         } else return null;
     }
