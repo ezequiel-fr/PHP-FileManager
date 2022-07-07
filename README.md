@@ -1,5 +1,5 @@
 # FileManager
-![Licence](https://badgen.net/badge/licence/The Unlicence/blue?icon=github)
+![Licence](https://badgen.net/badge/licence/TheUnlicence/blue?icon=github)
 ![Licence](https://badgen.net/badge/PHP/8.0.0/green?icon=github)
 <!-- ![Licence](https://badgen.net/badge/Downloads//blue?icon=github) -->
 
