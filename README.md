@@ -1,7 +1,7 @@
 # FileManager
-![Licence](https://badgen.net/badge/licence/TheUnlicense/blue?icon=github)
-![Licence](https://badgen.net/badge/PHP/8.0.0/green?icon=github)
-<!-- ![Licence](https://badgen.net/badge/Downloads//blue?icon=github) -->
+![License](https://badgen.net/badge/license/TheUnlicense/blue?icon=github)
+![PHP](https://badgen.net/badge/PHP/8.0.0/green?icon=github)
+<!-- ![License](https://badgen.net/badge/Downloads//blue?icon=github) -->
 
 FileManager is an open-source library that has many features related to file management.
 For example, scanning folders, deleting, copying, ... \
