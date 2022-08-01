@@ -179,17 +179,33 @@ class FileManager extends Except {
      * 
      * A feature in developpement that can upload files from $_FILES requests.
      * 
-     * @param $content
-     * @param string $allowedExtensions
+     * @param string $destination
+     * @param int|string $sizeLimit
      * 
-     * @return Upload
+     * @return any|void
      */
 
-    public function upload(): Upload
+    public function upload(string $destination = "", int|string $sizeLimit = ""): void
     {
+        // Temp.
         $upload = new Upload();
 
-        return $upload;
+        $upload->setAllowedExtensions();
+        $upload->setForbiddenExtensions();
+
+        if (!empty($sizeLimit))
+            $upload->setLimitFileSize($sizeLimit);
+
+        if (empty($destination)) {
+            if (empty($this->_realPath)) {
+                $this->exception("No destination path specified.");
+            } else {
+                $destination = $this->_realPath;
+            }
+        }
+
+        // Upload
+        $upload->uploadByPost($destination, !is_readable($destination), !0);
     }
 
 
