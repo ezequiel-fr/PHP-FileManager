@@ -194,4 +194,130 @@ class Upload {
         return $this->_limit_file_size;
     }
 
+
+    /**
+     * Check if the extension of he file that will be upload is in the
+     * allowed extensions list. \
+     * If `$returnExtension` is true, it will return a string containing the extension, otherwise a boolean.
+     * 
+     * @param array|string $file The file to check the extension
+     * @param bool|int $returnExtension If `true`, will extension.
+     * 
+     * @return bool|never|string The extension or a boolean
+     */
+
+    public function checkExtension(array|string $file, bool|int $returnExtension = 0): bool|string
+    {
+        // Get ext
+        $extUpload = strtolower(substr(strrchr($file, '.'), 1));
+
+        if ($this->_allowed_extensions != []) {
+            return in_array($extUpload, $this->_allowed_extensions)
+                ? ($returnExtension ? $extUpload : true)
+                : false;
+        }
+
+        (new Except())->error("Allowed extensions were not set.", 404);
+    }
+
+
+    /**
+     * Upload files thanks to POST method (html forms).
+     * 
+     * By using the destination folder (you can also request to create one),
+     * it will upload all files contained in the `$_FILES` (POST method).
+     * If you want to upload a folder and also keep all the original paths,
+     * set `true` (1) to the `$useDirectory` variable. But if the folder where
+     * you want to upload the files isn't empty, it will return an error. If
+     * you really want to upload files into a non-empty folder, you must set
+     * `$ignoreDestContent` to true, but in any case, this function will remove
+     * its old content.
+     * 
+     * @param string $destination 
+     * @param bool|int $createDestination 
+     * @param bool|int $useDirectories 
+     * @param bool|int $ignoreDestContent 
+     * 
+     * @return void Anything
+     */
+
+    public function uploadByPost(
+        string $destination,
+        bool|int $createDestination = 0,
+        bool|int $useDirectories = 0,
+        bool|int $ignoreDestContent = 0
+    ): void {
+        define("DIR_SEPARATOR", self::DIR_SEPARATOR);
+
+        // Destination dir
+        if (is_dir($destination)) {
+            if (!$ignoreDestContent && count(scandir($destination)) > 2)
+                [new Except, "exception"]("Folder seems to already contain some files.");
+        } else {
+            if ($createDestination) {
+                mkdir($destination);
+            } else [new Except, "exception"]("Cannot read destination path.");
+        }
+
+        foreach ($_FILES as $file) {
+            if ($file['size'] <= $this->_limit_file_size) {
+                // Check ext
+
+                if ($this->checkExtension($file['name'])) {
+                    if ($useDirectories) {    
+                        $getPath = function (string $var): array {
+                            $obj = explode(DIR_SEPARATOR, $var);
+                            $a = [];
+
+                            foreach ($obj as $b)
+                                array_push($a, $b);
+
+                            return $a;
+                        };
+
+                        $convertToDirs = function (array $var): array {
+                            if (sizeof($var) > 1) {
+                                $a = [];
+
+                                for ($b = 0; $b > sizeof($var); $b++) {
+                                    for ($c = 0, $d = []; $c < $b + 1; $c++)
+                                        array_push($d, $var[$c]);
+
+                                    array_push($a, join(DIR_SEPARATOR, $d));
+                                }
+
+                                return $a;
+                            }
+                            else if (sizeof($var) == 1) return [$var[0]];
+                            else return array("");
+                        };
+
+                        $a = $getPath($file['full_path']);
+
+                        array_shift($a);
+                        array_pop($a);
+
+                        $dirs = $convertToDirs($a);
+
+                        // Create folders
+                        foreach ($dirs as $dir) {
+                            $dir = Scan::readableFile($destination.DIR_SEPARATOR.$dir);
+
+                            if (!is_dir($dir)) mkdir($dir);
+                        }
+
+                        $filePath = Scan::readableFile($destination.DIR_SEPARATOR.array_pop($dirs));
+                    } else {
+                        $filePath = Scan::readableFile($destination);
+                    }
+
+                    $filePath .= DIR_SEPARATOR.$file['name'];
+
+                    // Upload file
+                    move_uploaded_file($file['tmp_name'], $filePath);
+                } // Invalid file's extension
+            } // File too large
+        }
+    }
+
 }
