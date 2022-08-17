@@ -5,7 +5,7 @@
 
 FileManager is an open-source library that has many features related to file management.
 For example, scanning folders, deleting, copying, ... \
-It manages files as well as folders.²
+It manages files as well as folders.
 
 This PHP dependence is made by [Ezequiel Dev](https://github.com/TheRedMineTheRedMine). \
 All credits and rights are retained. Thus, although the code is open-source, we disclaim any warranty or liability for any particular misuse.
